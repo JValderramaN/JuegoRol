@@ -6,19 +6,54 @@
 package UI;
 
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import models.Cuenta;
 
-/**
- *
- * @author eduardo
- */
 public class Principal extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Principal
-     */
+    private List<Cuenta> cuentas;
+
     public Principal() {
+        FileOutputStream fos = null;
         initComponents();
         setLocationRelativeTo(null);
+
+        
+        /*
+        cuentas = new ArrayList<>();
+        cuentas.add(new Cuenta("sync", "123"));
+        cuentas.add(new Cuenta("sync", "1234"));
+        cuentas.add(new Cuenta("sync", "12345"));
+        
+        try {
+
+            fos = new FileOutputStream(getClass().getResource(
+                    "/resources/data/cuentas.data").getPath());
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(cuentas);
+            oos.close();
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }*/
+
     }
 
     /**
@@ -30,56 +65,11 @@ public class Principal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jdLogin = new javax.swing.JDialog();
+        inicio = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         tfUsuario = new javax.swing.JTextField();
         btEntrar = new javax.swing.JButton();
-        inicio = new javax.swing.JLabel();
         background = new javax.swing.JLabel();
-
-        jdLogin.setModal(true);
-        jdLogin.setResizable(false);
-
-        jLabel1.setText("Usuario");
-
-        tfUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                tfUsuarioKeyReleased(evt);
-            }
-        });
-
-        btEntrar.setText("Entrar");
-        btEntrar.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btEntrarMouseClicked(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jdLoginLayout = new javax.swing.GroupLayout(jdLogin.getContentPane());
-        jdLogin.getContentPane().setLayout(jdLoginLayout);
-        jdLoginLayout.setHorizontalGroup(
-            jdLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jdLoginLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(tfUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jdLoginLayout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addComponent(btEntrar)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        jdLoginLayout.setVerticalGroup(
-            jdLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jdLoginLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jdLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(tfUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btEntrar)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("WOAAO");
@@ -94,7 +84,27 @@ public class Principal extends javax.swing.JFrame {
                 inicioMouseClicked(evt);
             }
         });
-        getContentPane().add(inicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 360, 100, 110));
+        getContentPane().add(inicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 230, 100, 110));
+
+        jLabel1.setFont(new java.awt.Font("Tempus Sans ITC", 1, 24)); // NOI18N
+        jLabel1.setText("Usuario");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 360, -1, -1));
+
+        tfUsuario.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        tfUsuario.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tfUsuarioKeyReleased(evt);
+            }
+        });
+        getContentPane().add(tfUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 410, 160, -1));
+
+        btEntrar.setText("Entrar");
+        btEntrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btEntrarMouseClicked(evt);
+            }
+        });
+        getContentPane().add(btEntrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 450, -1, -1));
 
         background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/background.jpg"))); // NOI18N
         getContentPane().add(background, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -103,19 +113,17 @@ public class Principal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void inicioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inicioMouseClicked
-        this.jdLogin.setLocationRelativeTo(this);
-        this.jdLogin.pack();
-        this.jdLogin.setVisible(true);
+       this.dispose();
+        new Lobby(tfUsuario.getText()).setVisible(true);
     }//GEN-LAST:event_inicioMouseClicked
 
     private void btEntrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btEntrarMouseClicked
         this.dispose();
-        this.jdLogin.dispose();
         new Lobby(tfUsuario.getText()).setVisible(true);
     }//GEN-LAST:event_btEntrarMouseClicked
 
     private void tfUsuarioKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfUsuarioKeyReleased
-        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             btEntrarMouseClicked(null);
         }
     }//GEN-LAST:event_tfUsuarioKeyReleased
@@ -160,7 +168,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JButton btEntrar;
     private javax.swing.JLabel inicio;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JDialog jdLogin;
     private javax.swing.JTextField tfUsuario;
     // End of variables declaration//GEN-END:variables
 }

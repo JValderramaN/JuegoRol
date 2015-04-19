@@ -6,9 +6,11 @@
 package UI;
 
 import java.awt.Image;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Icon;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.*;
 
@@ -20,16 +22,23 @@ public class Lobby extends javax.swing.JFrame {
 
     DefaultTableModel modelo;
     List<Personaje> listaPersonajes = new ArrayList<>();
+    private int contadorPersonajes = 6;
+
+    DefaultTableModel modelo1;
+    List<Personaje> listaPersonajes1 = new ArrayList<>();
+    private int contadorPersonajes1 = 6;
 
     public Lobby(String nombreUsuario) {
         initComponents();
 
         modelo = (DefaultTableModel) tablaPersonajes.getModel();
+        modelo1 = (DefaultTableModel) tablaPersonajes1.getModel();
 
-        banner.setIcon(new javax.swing.ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/banner.jpg"))
-                .getImage().getScaledInstance(banner.getWidth(), banner.getHeight(), Image.SCALE_DEFAULT)
-        ));
-
+        /*
+         banner.setIcon(new javax.swing.ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/banner.jpg"))
+         .getImage().getScaledInstance(banner.getWidth(), banner.getHeight(), Image.SCALE_DEFAULT)
+         ));
+         */
         this.setTitle("Usuario: " + nombreUsuario);
         this.setLocationRelativeTo(null);
     }
@@ -43,16 +52,6 @@ public class Lobby extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        banner = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tablaPersonajes = new javax.swing.JTable() {
-            //  Returning the Class of each column will allow different
-            //  renderers to be used based on Class
-            public Class getColumnClass(int column)
-            {
-                return getValueAt(0, column).getClass();
-            }
-        };
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -62,42 +61,47 @@ public class Lobby extends javax.swing.JFrame {
         lbImagen = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         btCrear = new javax.swing.JButton();
+        tbpEq = new javax.swing.JTabbedPane();
+        jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaPersonajes = new javax.swing.JTable() {
+            //  Returning the Class of each column will allow different
+            //  renderers to be used based on Class
+            public Class getColumnClass(int column)
+            {
+                return getValueAt(0, column).getClass();
+            }
+        };
+        jLabel3 = new javax.swing.JLabel();
+        tfEq1 = new javax.swing.JTextField();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaPersonajes1 = new javax.swing.JTable() {
+            //  Returning the Class of each column will allow different
+            //  renderers to be used based on Class
+            public Class getColumnClass(int column)
+            {
+                return getValueAt(0, column).getClass();
+            }
+        };
+        jLabel5 = new javax.swing.JLabel();
+        tfEq2 = new javax.swing.JTextField();
         background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/logo.png")).getImage()
         );
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(banner, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 10, 330, 50));
-
-        tablaPersonajes.setBackground(new java.awt.Color(255, 153, 102));
-        tablaPersonajes.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        tablaPersonajes.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Nombre", "Ataque", "Vida", "Tipo", "Imagen"
-            }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        tablaPersonajes.setOpaque(false);
-        tablaPersonajes.setRowHeight(130);
-        tablaPersonajes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.setViewportView(tablaPersonajes);
-
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, 330, 570));
 
         jPanel1.setBackground(new java.awt.Color(255, 153, 0));
 
         jLabel1.setText("Nombre");
+
+        tfNombre.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tfNombreKeyReleased(evt);
+            }
+        });
 
         jLabel2.setText("Rol");
 
@@ -162,6 +166,142 @@ public class Lobby extends javax.swing.JFrame {
 
         getContentPane().add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 60, 210, 350));
 
+        jScrollPane1.setBackground(new java.awt.Color(255, 102, 51));
+        jScrollPane1.setOpaque(false);
+
+        tablaPersonajes.setBackground(new java.awt.Color(255, 153, 102));
+        tablaPersonajes.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        tablaPersonajes.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nombre", "Ataque", "Vida", "Tipo", "Imagen"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaPersonajes.setToolTipText("Seleccione un personaje, y presione DELETE para eliminar");
+        tablaPersonajes.setOpaque(false);
+        tablaPersonajes.setRowHeight(130);
+        tablaPersonajes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaPersonajes.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tablaPersonajesKeyReleased(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablaPersonajes);
+
+        jLabel3.setText("Nombre de Equipo");
+
+        tfEq1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tfEq1KeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 3, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addGap(27, 27, 27)
+                .addComponent(tfEq1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfEq1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        tbpEq.addTab("Equipo 1", jPanel2);
+
+        jScrollPane2.setBackground(new java.awt.Color(255, 102, 51));
+        jScrollPane2.setOpaque(false);
+
+        tablaPersonajes1.setBackground(new java.awt.Color(255, 153, 102));
+        tablaPersonajes1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        tablaPersonajes1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nombre", "Ataque", "Vida", "Tipo", "Imagen"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaPersonajes1.setToolTipText("Seleccione un personaje, y presione DELETE para eliminar");
+        tablaPersonajes1.setOpaque(false);
+        tablaPersonajes1.setRowHeight(130);
+        tablaPersonajes1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaPersonajes1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tablaPersonajes1KeyReleased(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tablaPersonajes1);
+
+        jLabel5.setText("Nombre de Equipo");
+
+        tfEq2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tfEq2KeyReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 3, Short.MAX_VALUE))
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addGap(27, 27, 27)
+                .addComponent(tfEq2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tfEq2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        tbpEq.addTab("Equipo 2", jPanel4);
+
+        getContentPane().add(tbpEq, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 60, 460, 570));
+
         background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/background.jpg"))); // NOI18N
         getContentPane().add(background, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
@@ -188,46 +328,113 @@ public class Lobby extends javax.swing.JFrame {
     }//GEN-LAST:event_cbRolActionPerformed
 
     private void btCrearMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btCrearMouseClicked
+
+        if (tbpEq.getSelectedIndex() == 0 && contadorPersonajes == 0
+                || tbpEq.getSelectedIndex() == 1 && contadorPersonajes1 == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Ya posee el numero maximo de personajes creados en este equipo");
+            return;
+        }
+
+        if (tfNombre.getText().equals("")) {
+            tfNombre.requestFocus();
+            return;
+        }
+
+        Personaje p = null;
+        String tipo = "";
+
         switch ((String) cbRol.getSelectedItem()) {
             case "Aldeano":
-                Aldeano aldeano = new Aldeano(tfNombre.getText());
-                listaPersonajes.add(aldeano);
-                modelo.addRow(new Object[]{
-                    aldeano.getNombre(),
-                    aldeano.getPt_ataque(),
-                    aldeano.getPt_vida(),
-                    "Aldeano",
-                    new javax.swing.ImageIcon(getClass().
-                    getResource("/resources/characters/aldeano.jpg"))
-                });
+                p = new Aldeano(tfNombre.getText());
+                tipo = "Aldeano";
                 break;
             case "Mago":
-                Mago mago = new Mago(tfNombre.getText());
-                listaPersonajes.add(mago);
-                modelo.addRow(new Object[]{
-                    mago.getNombre(),
-                    mago.getPt_ataque(),
-                    mago.getPt_vida(),
-                    "Mago",
-                    new javax.swing.ImageIcon(getClass().
-                    getResource("/resources/characters/mago.jpg"))
-                });
-
+                p = new Mago(tfNombre.getText());
+                tipo = "Mago";
                 break;
             case "Paladin":
-                Paladin paladin = new Paladin(tfNombre.getText());
-                listaPersonajes.add(paladin);
-                modelo.addRow(new Object[]{
-                    paladin.getNombre(),
-                    paladin.getPt_ataque(),
-                    paladin.getPt_vida(),
-                    "Paladin",
-                    new javax.swing.ImageIcon(getClass().
-                    getResource("/resources/characters/paladin.jpg"))
-                });
+                p = new Paladin(tfNombre.getText());
+                tipo = "Paladin";
                 break;
         }
+
+        switch (tbpEq.getSelectedIndex()) {
+            case 0:
+                modelo.addRow(new Object[]{
+                    p.getNombre(),
+                    p.getPt_ataque(),
+                    p.getPt_vida(),
+                    tipo,
+                    new javax.swing.ImageIcon(getClass().
+                    getResource("/resources/characters/" + tipo.toLowerCase() + ".jpg"))
+                });
+                listaPersonajes.add(p);
+                contadorPersonajes--;
+                break;
+            case 1:
+                modelo1.addRow(new Object[]{
+                    p.getNombre(),
+                    p.getPt_ataque(),
+                    p.getPt_vida(),
+                    tipo,
+                    new javax.swing.ImageIcon(getClass().
+                    getResource("/resources/characters/" + tipo.toLowerCase() + ".jpg"))
+                });
+                listaPersonajes1.add(p);
+                contadorPersonajes1--;
+                break;
+        }
+
+        tfNombre.setText("");
+
+
     }//GEN-LAST:event_btCrearMouseClicked
+
+    private void tablaPersonajesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tablaPersonajesKeyReleased
+        if (tablaPersonajes.getSelectedRow() == -1) {
+            return;
+        }
+
+        int fila = tablaPersonajes.getSelectedRow();
+
+        if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            modelo.removeRow(fila);
+            listaPersonajes.remove(fila);
+            contadorPersonajes++;
+        }
+
+
+    }//GEN-LAST:event_tablaPersonajesKeyReleased
+
+    private void tfNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfNombreKeyReleased
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            btCrearMouseClicked(null);
+        }
+    }//GEN-LAST:event_tfNombreKeyReleased
+
+    private void tfEq1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfEq1KeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfEq1KeyReleased
+
+    private void tablaPersonajes1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tablaPersonajes1KeyReleased
+        if (tablaPersonajes1.getSelectedRow() == -1) {
+            return;
+        }
+
+        int fila = tablaPersonajes1.getSelectedRow();
+
+        if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            modelo1.removeRow(fila);
+            listaPersonajes1.remove(fila);
+            contadorPersonajes1++;
+        }
+
+    }//GEN-LAST:event_tablaPersonajes1KeyReleased
+
+    private void tfEq2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfEq2KeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfEq2KeyReleased
 
     /**
      * @param args the command line arguments
@@ -266,17 +473,25 @@ public class Lobby extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel background;
-    private javax.swing.JLabel banner;
     private javax.swing.JButton btCrear;
     private javax.swing.JComboBox cbRol;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lbImagen;
     private javax.swing.JTable tablaPersonajes;
+    private javax.swing.JTable tablaPersonajes1;
+    private javax.swing.JTabbedPane tbpEq;
+    private javax.swing.JTextField tfEq1;
+    private javax.swing.JTextField tfEq2;
     private javax.swing.JTextField tfNombre;
     // End of variables declaration//GEN-END:variables
 }
