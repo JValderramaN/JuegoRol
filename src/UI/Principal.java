@@ -17,17 +17,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import models.Cuenta;
+import utilities.Audio;
 
 public class Principal extends javax.swing.JFrame {
 
     private List<Cuenta> cuentas;
-
+    private Audio backGroundSound;
     public Principal() {
         FileOutputStream fos = null;
         initComponents();
         setLocationRelativeTo(null);
-
         
+        backGroundSound = new Audio(getClass().getResource("/resources/sounds/bgSound.wav"));
+        backGroundSound.loop();
         /*
         cuentas = new ArrayList<>();
         cuentas.add(new Cuenta("sync", "123"));

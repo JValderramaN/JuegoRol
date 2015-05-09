@@ -13,6 +13,7 @@ import javax.swing.Icon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import models.*;
+import utilities.Audio;
 
 /**
  *
@@ -20,19 +21,19 @@ import models.*;
  */
 public class Lobby extends javax.swing.JFrame {
 
-    DefaultTableModel modelo;
-    List<Personaje> listaPersonajes = new ArrayList<>();
-    private int contadorPersonajes = 6;
+    DefaultTableModel modeloTabla1;
+    List<Personaje> listaPersonajesEquipo1 = new ArrayList<>();
+    private int contadorPersonajesEquipo1 = 6;
 
-    DefaultTableModel modelo1;
-    List<Personaje> listaPersonajes1 = new ArrayList<>();
-    private int contadorPersonajes1 = 6;
+    DefaultTableModel modeloTabla2;
+    List<Personaje> listaPersonajesEquipo2 = new ArrayList<>();
+    private int contadorPersonajesEquipo2 = 6;
 
     public Lobby(String nombreUsuario) {
         initComponents();
 
-        modelo = (DefaultTableModel) tablaPersonajes.getModel();
-        modelo1 = (DefaultTableModel) tablaPersonajes1.getModel();
+        modeloTabla1 = (DefaultTableModel) tablaPersonajesEquipo1.getModel();
+        modeloTabla2 = (DefaultTableModel) tablaPersonajesEquipo2.getModel();
 
         /*
          banner.setIcon(new javax.swing.ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/banner.jpg"))
@@ -64,7 +65,7 @@ public class Lobby extends javax.swing.JFrame {
         tbpEq = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaPersonajes = new javax.swing.JTable() {
+        tablaPersonajesEquipo1 = new javax.swing.JTable() {
             //  Returning the Class of each column will allow different
             //  renderers to be used based on Class
             public Class getColumnClass(int column)
@@ -76,7 +77,7 @@ public class Lobby extends javax.swing.JFrame {
         tfEq1 = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tablaPersonajes1 = new javax.swing.JTable() {
+        tablaPersonajesEquipo2 = new javax.swing.JTable() {
             //  Returning the Class of each column will allow different
             //  renderers to be used based on Class
             public Class getColumnClass(int column)
@@ -86,6 +87,7 @@ public class Lobby extends javax.swing.JFrame {
         };
         jLabel5 = new javax.swing.JLabel();
         tfEq2 = new javax.swing.JTextField();
+        btBatallar = new javax.swing.JButton();
         background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -169,9 +171,9 @@ public class Lobby extends javax.swing.JFrame {
         jScrollPane1.setBackground(new java.awt.Color(255, 102, 51));
         jScrollPane1.setOpaque(false);
 
-        tablaPersonajes.setBackground(new java.awt.Color(255, 153, 102));
-        tablaPersonajes.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        tablaPersonajes.setModel(new javax.swing.table.DefaultTableModel(
+        tablaPersonajesEquipo1.setBackground(new java.awt.Color(255, 153, 102));
+        tablaPersonajesEquipo1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        tablaPersonajesEquipo1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -187,16 +189,16 @@ public class Lobby extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tablaPersonajes.setToolTipText("Seleccione un personaje, y presione DELETE para eliminar");
-        tablaPersonajes.setOpaque(false);
-        tablaPersonajes.setRowHeight(130);
-        tablaPersonajes.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tablaPersonajes.addKeyListener(new java.awt.event.KeyAdapter() {
+        tablaPersonajesEquipo1.setToolTipText("Seleccione un personaje, y presione DELETE para eliminar");
+        tablaPersonajesEquipo1.setOpaque(false);
+        tablaPersonajesEquipo1.setRowHeight(130);
+        tablaPersonajesEquipo1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaPersonajesEquipo1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                tablaPersonajesKeyReleased(evt);
+                tablaPersonajesEquipo1KeyReleased(evt);
             }
         });
-        jScrollPane1.setViewportView(tablaPersonajes);
+        jScrollPane1.setViewportView(tablaPersonajesEquipo1);
 
         jLabel3.setText("Nombre de Equipo");
 
@@ -236,9 +238,9 @@ public class Lobby extends javax.swing.JFrame {
         jScrollPane2.setBackground(new java.awt.Color(255, 102, 51));
         jScrollPane2.setOpaque(false);
 
-        tablaPersonajes1.setBackground(new java.awt.Color(255, 153, 102));
-        tablaPersonajes1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        tablaPersonajes1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaPersonajesEquipo2.setBackground(new java.awt.Color(255, 153, 102));
+        tablaPersonajesEquipo2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        tablaPersonajesEquipo2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -254,16 +256,16 @@ public class Lobby extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tablaPersonajes1.setToolTipText("Seleccione un personaje, y presione DELETE para eliminar");
-        tablaPersonajes1.setOpaque(false);
-        tablaPersonajes1.setRowHeight(130);
-        tablaPersonajes1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        tablaPersonajes1.addKeyListener(new java.awt.event.KeyAdapter() {
+        tablaPersonajesEquipo2.setToolTipText("Seleccione un personaje, y presione DELETE para eliminar");
+        tablaPersonajesEquipo2.setOpaque(false);
+        tablaPersonajesEquipo2.setRowHeight(130);
+        tablaPersonajesEquipo2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaPersonajesEquipo2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                tablaPersonajes1KeyReleased(evt);
+                tablaPersonajesEquipo2KeyReleased(evt);
             }
         });
-        jScrollPane2.setViewportView(tablaPersonajes1);
+        jScrollPane2.setViewportView(tablaPersonajesEquipo2);
 
         jLabel5.setText("Nombre de Equipo");
 
@@ -302,6 +304,15 @@ public class Lobby extends javax.swing.JFrame {
 
         getContentPane().add(tbpEq, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 60, 460, 570));
 
+        btBatallar.setText("LISTO PARA LA BATALA!!");
+        btBatallar.setEnabled(false);
+        btBatallar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btBatallarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btBatallar, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 550, 170, 50));
+
         background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/background.jpg"))); // NOI18N
         getContentPane().add(background, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
@@ -329,8 +340,8 @@ public class Lobby extends javax.swing.JFrame {
 
     private void btCrearMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btCrearMouseClicked
 
-        if (tbpEq.getSelectedIndex() == 0 && contadorPersonajes == 0
-                || tbpEq.getSelectedIndex() == 1 && contadorPersonajes1 == 0) {
+        if (tbpEq.getSelectedIndex() == 0 && contadorPersonajesEquipo1 == 0
+                || tbpEq.getSelectedIndex() == 1 && contadorPersonajesEquipo2 == 0) {
             JOptionPane.showMessageDialog(this,
                     "Ya posee el numero maximo de personajes creados en este equipo");
             return;
@@ -361,7 +372,7 @@ public class Lobby extends javax.swing.JFrame {
 
         switch (tbpEq.getSelectedIndex()) {
             case 0:
-                modelo.addRow(new Object[]{
+                modeloTabla1.addRow(new Object[]{
                     p.getNombre(),
                     p.getPt_ataque(),
                     p.getPt_vida(),
@@ -369,11 +380,11 @@ public class Lobby extends javax.swing.JFrame {
                     new javax.swing.ImageIcon(getClass().
                     getResource("/resources/characters/" + tipo.toLowerCase() + ".jpg"))
                 });
-                listaPersonajes.add(p);
-                contadorPersonajes--;
+                listaPersonajesEquipo1.add(p);
+                contadorPersonajesEquipo1--;
                 break;
             case 1:
-                modelo1.addRow(new Object[]{
+                modeloTabla2.addRow(new Object[]{
                     p.getNombre(),
                     p.getPt_ataque(),
                     p.getPt_vida(),
@@ -381,31 +392,33 @@ public class Lobby extends javax.swing.JFrame {
                     new javax.swing.ImageIcon(getClass().
                     getResource("/resources/characters/" + tipo.toLowerCase() + ".jpg"))
                 });
-                listaPersonajes1.add(p);
-                contadorPersonajes1--;
+                listaPersonajesEquipo2.add(p);
+                contadorPersonajesEquipo2--;
                 break;
         }
 
         tfNombre.setText("");
 
-
+        btBatallar.setEnabled(listaPersonajesEquipo1.size()>=1 && listaPersonajesEquipo2.size()>=1);
+        
     }//GEN-LAST:event_btCrearMouseClicked
 
-    private void tablaPersonajesKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tablaPersonajesKeyReleased
-        if (tablaPersonajes.getSelectedRow() == -1) {
+    private void tablaPersonajesEquipo1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tablaPersonajesEquipo1KeyReleased
+        if (tablaPersonajesEquipo1.getSelectedRow() == -1) {
             return;
         }
 
-        int fila = tablaPersonajes.getSelectedRow();
+        int fila = tablaPersonajesEquipo1.getSelectedRow();
 
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
-            modelo.removeRow(fila);
-            listaPersonajes.remove(fila);
-            contadorPersonajes++;
+            modeloTabla1.removeRow(fila);
+            listaPersonajesEquipo1.remove(fila);
+            contadorPersonajesEquipo1++;
+            btBatallar.setEnabled(listaPersonajesEquipo1.size()>=1 && listaPersonajesEquipo2.size()>=1);
         }
 
 
-    }//GEN-LAST:event_tablaPersonajesKeyReleased
+    }//GEN-LAST:event_tablaPersonajesEquipo1KeyReleased
 
     private void tfNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfNombreKeyReleased
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -417,24 +430,33 @@ public class Lobby extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tfEq1KeyReleased
 
-    private void tablaPersonajes1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tablaPersonajes1KeyReleased
-        if (tablaPersonajes1.getSelectedRow() == -1) {
+    private void tablaPersonajesEquipo2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tablaPersonajesEquipo2KeyReleased
+        if (tablaPersonajesEquipo2.getSelectedRow() == -1) {
             return;
         }
 
-        int fila = tablaPersonajes1.getSelectedRow();
+        int fila = tablaPersonajesEquipo2.getSelectedRow();
 
         if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
-            modelo1.removeRow(fila);
-            listaPersonajes1.remove(fila);
-            contadorPersonajes1++;
+            modeloTabla2.removeRow(fila);
+            listaPersonajesEquipo2.remove(fila);
+            contadorPersonajesEquipo2++;
+            btBatallar.setEnabled(listaPersonajesEquipo1.size()>=1 && listaPersonajesEquipo2.size()>=1);
         }
 
-    }//GEN-LAST:event_tablaPersonajes1KeyReleased
+    }//GEN-LAST:event_tablaPersonajesEquipo2KeyReleased
 
     private void tfEq2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfEq2KeyReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_tfEq2KeyReleased
+
+    private void btBatallarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBatallarActionPerformed
+       Audio atk = new Audio(getClass().getResource("/resources/sounds/attack.wav"));
+       atk.play();
+       
+       dispose();
+       new BattleField(listaPersonajesEquipo1,listaPersonajesEquipo2).setVisible(true);
+    }//GEN-LAST:event_btBatallarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -473,6 +495,7 @@ public class Lobby extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel background;
+    private javax.swing.JButton btBatallar;
     private javax.swing.JButton btCrear;
     private javax.swing.JComboBox cbRol;
     private javax.swing.JLabel jLabel1;
@@ -487,8 +510,8 @@ public class Lobby extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lbImagen;
-    private javax.swing.JTable tablaPersonajes;
-    private javax.swing.JTable tablaPersonajes1;
+    private javax.swing.JTable tablaPersonajesEquipo1;
+    private javax.swing.JTable tablaPersonajesEquipo2;
     private javax.swing.JTabbedPane tbpEq;
     private javax.swing.JTextField tfEq1;
     private javax.swing.JTextField tfEq2;
