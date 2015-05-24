@@ -23,7 +23,7 @@ public class Aldeano extends Personaje {
 
         //modo berserker
         if (this.getPt_vida() > 0 && this.getPt_vida() <= 20) {
-            this.setPt_ataque(this.getPt_ataque() * 4);
+            this.setPt_ataque(this.getPt_ataque() * 8);
         }
 
     }

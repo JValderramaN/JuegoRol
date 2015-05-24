@@ -7,8 +7,14 @@ package UI;
 
 import java.awt.Image;
 import java.awt.event.KeyEvent;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Icon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -42,6 +48,30 @@ public class Lobby extends javax.swing.JFrame {
          */
         this.setTitle("Usuario: " + nombreUsuario);
         this.setLocationRelativeTo(null);
+
+        Thread hilo = new Thread() {
+            @Override
+            public void run() {
+                try (BufferedReader br = new BufferedReader(
+                        new FileReader(getClass().getResource("/resources/data/archivo.txt").toString())
+                )) {
+                    StringBuilder sb = new StringBuilder();
+                    String line = br.readLine();
+
+                    while (line != null) {
+                        sb.append(line);
+                        sb.append(System.lineSeparator());
+                        line = br.readLine();
+                    }
+                    String everything = sb.toString();
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Lobby.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        };
+        hilo.start();
     }
 
     /**
@@ -122,6 +152,11 @@ public class Lobby extends javax.swing.JFrame {
         btCrear.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btCrearMouseClicked(evt);
+            }
+        });
+        btCrear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btCrearActionPerformed(evt);
             }
         });
 
@@ -338,6 +373,17 @@ public class Lobby extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_cbRolActionPerformed
 
+    private boolean existName(List<Personaje> lista, String nombre) {
+
+        for (Personaje personaje : lista) {
+            if (personaje.getNombre().equals(nombre)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     private void btCrearMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btCrearMouseClicked
 
         if (tbpEq.getSelectedIndex() == 0 && contadorPersonajesEquipo1 == 0
@@ -348,6 +394,14 @@ public class Lobby extends javax.swing.JFrame {
         }
 
         if (tfNombre.getText().equals("")) {
+            tfNombre.requestFocus();
+            return;
+        }
+
+        if ((tbpEq.getSelectedIndex() == 0 && existName(listaPersonajesEquipo1, tfNombre.getText()))
+                || (tbpEq.getSelectedIndex() == 1 && existName(listaPersonajesEquipo2, tfNombre.getText()))) {
+            JOptionPane.showMessageDialog(this,
+                    "Ya posee un personaje creado con este nombre en este equipo");
             tfNombre.requestFocus();
             return;
         }
@@ -399,8 +453,8 @@ public class Lobby extends javax.swing.JFrame {
 
         tfNombre.setText("");
 
-        btBatallar.setEnabled(listaPersonajesEquipo1.size()>=1 && listaPersonajesEquipo2.size()>=1);
-        
+        btBatallar.setEnabled(listaPersonajesEquipo1.size() >= 1 && listaPersonajesEquipo2.size() >= 1);
+
     }//GEN-LAST:event_btCrearMouseClicked
 
     private void tablaPersonajesEquipo1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tablaPersonajesEquipo1KeyReleased
@@ -414,7 +468,7 @@ public class Lobby extends javax.swing.JFrame {
             modeloTabla1.removeRow(fila);
             listaPersonajesEquipo1.remove(fila);
             contadorPersonajesEquipo1++;
-            btBatallar.setEnabled(listaPersonajesEquipo1.size()>=1 && listaPersonajesEquipo2.size()>=1);
+            btBatallar.setEnabled(listaPersonajesEquipo1.size() >= 1 && listaPersonajesEquipo2.size() >= 1);
         }
 
 
@@ -441,7 +495,7 @@ public class Lobby extends javax.swing.JFrame {
             modeloTabla2.removeRow(fila);
             listaPersonajesEquipo2.remove(fila);
             contadorPersonajesEquipo2++;
-            btBatallar.setEnabled(listaPersonajesEquipo1.size()>=1 && listaPersonajesEquipo2.size()>=1);
+            btBatallar.setEnabled(listaPersonajesEquipo1.size() >= 1 && listaPersonajesEquipo2.size() >= 1);
         }
 
     }//GEN-LAST:event_tablaPersonajesEquipo2KeyReleased
@@ -451,12 +505,38 @@ public class Lobby extends javax.swing.JFrame {
     }//GEN-LAST:event_tfEq2KeyReleased
 
     private void btBatallarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btBatallarActionPerformed
-       Audio atk = new Audio(getClass().getResource("/resources/sounds/attack.wav"));
-       atk.play();
-       
-       dispose();
-       new BattleField(listaPersonajesEquipo1,listaPersonajesEquipo2).setVisible(true);
+        if (tfEq1.getText().equals("")) {
+            tbpEq.setSelectedIndex(0);
+            tfEq1.requestFocus();
+            return;
+        }
+
+        if (tfEq2.getText().equals("")) {
+            tbpEq.setSelectedIndex(1);
+            tfEq2.requestFocus();
+            return;
+        }
+
+        if (tfEq1.getText().equals(tfEq2.getText())) {
+            JOptionPane.showMessageDialog(this,
+                    "Los nombres de equipo no pueden ser iguales");
+            return;
+        }
+
+        Audio atk = new Audio(getClass().getResource("/resources/sounds/attack.wav"));
+        atk.play();
+
+        Principal.backGroundSound.stop();
+        //Principal.backGroundSound = new Audio(getClass().getResource("/resources/sounds/pelea.wav"));
+        //Principal.backGroundSound.loop();
+
+        dispose();
+        new BattleField(listaPersonajesEquipo1, tfEq1.getText(), listaPersonajesEquipo2, tfEq2.getText()).setVisible(true);
     }//GEN-LAST:event_btBatallarActionPerformed
+
+    private void btCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCrearActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btCrearActionPerformed
 
     /**
      * @param args the command line arguments

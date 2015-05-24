@@ -17,6 +17,8 @@ public class Paladin extends Personaje {
     static public final int guillotinaProb = 5;
     public static final int ataquePaladinBase = 20;
 
+    private boolean guillotina;
+
     public Paladin(int pt_vida, int pt_ataque, String nombre) {
         super(pt_vida, pt_ataque, nombre);
     }
@@ -27,16 +29,27 @@ public class Paladin extends Personaje {
 
     @Override
     public void atacar(Personaje objetivo) {
-        if (objetivo != null && !objetivo.equals(this) && objetivo instanceof Aldeano) {
+
+        if (objetivo != null && !objetivo.equals(this)) {
             Random rand = new Random();
-            int randomNum = rand.nextInt((5 - 1) + 1) + 1;
+            int randomNum = rand.nextInt((guillotinaProb - 1) + 1) + 1;
             //guillotina
-            if (randomNum == guillotinaProb) {
+            if (randomNum == guillotinaProb) {//randomNum == guillotinaProb
                 objetivo.setPt_vida(0);
+                this.setPt_vida(Math.round(this.getPt_vida() / 2));
+                this.setGuillotina(true);
             } else {
                 super.atacar(objetivo);
             }
         }
+    }
+
+    public boolean isGuillotina() {
+        return guillotina;
+    }
+
+    public void setGuillotina(boolean guillotina) {
+        this.guillotina = guillotina;
     }
 
 }

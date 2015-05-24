@@ -3,7 +3,7 @@ package models;
 public class Personaje {
 
     static public final int vidaMax = 100;
-    
+
     private int pt_vida = vidaMax;
     private int pt_ataque;
     private String nombre;
@@ -22,7 +22,11 @@ public class Personaje {
         if (pt_vida < 0) {
             pt_vida = 0;
         }
-        this.pt_vida = pt_vida;
+        if (pt_vida > vidaMax) {
+            this.pt_vida = vidaMax;
+        } else {
+            this.pt_vida = pt_vida;
+        }
     }
 
     public int getPt_ataque() {
@@ -42,9 +46,21 @@ public class Personaje {
     }
 
     public void atacar(Personaje objetivo) {
+       
         if (objetivo != null && !objetivo.equals(this) && objetivo.getPt_vida() != 0) {
             objetivo.setPt_vida(objetivo.getPt_vida() - this.getPt_ataque());
         }
     }
 
+    public String getTipo() {
+        if (this instanceof Aldeano) {
+            return "Aldeano";
+        } else {
+            if (this instanceof Mago) {
+                return "Mago";
+            } else {
+                return "Paladin";
+            }
+        }
+    }
 }

@@ -5,9 +5,22 @@
  */
 package UI;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Random;
+import javax.swing.Icon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import models.Aldeano;
+import models.Mago;
+import models.Paladin;
 import models.Personaje;
+import utilities.Audio;
 
 /**
  *
@@ -15,17 +28,66 @@ import models.Personaje;
  */
 public class BattleField extends javax.swing.JFrame {
 
+    private DefaultTableModel modeloTabla1;
+    private DefaultTableModel modeloTabla2;
+    private DefaultTableModel modeloTabla3;
     private List<Personaje> equipo1;
     private List<Personaje> equipo2;
-    
-    public BattleField(List<Personaje> equipo1,List<Personaje> equipo2) {
+    private String nombreEq1;
+    private String nombreEq2;
+
+    private boolean turno;
+
+    private boolean atacar = false;
+    private boolean curar = false;
+
+    private int index = -1;
+
+    public BattleField(List<Personaje> equipo1, String nombreEq1, List<Personaje> equipo2, String nombreEq2) {
         initComponents();
+        setLocationRelativeTo(null);
+
+        modeloTabla1 = (DefaultTableModel) tablaPersonajesEquipo1.getModel();
+        modeloTabla2 = (DefaultTableModel) tablaPersonajesEquipo2.getModel();
+        modeloTabla3 = (DefaultTableModel) tablaInfo.getModel();
+
+        this.nombreEq1 = nombreEq1;
+        this.nombreEq2 = nombreEq2;
+        this.equipo1 = equipo1;
+        this.equipo2 = equipo2;
+
+        lbImg1.setVisible(false);
+        lbImg2.setVisible(false);
+        lbHeal.setVisible(false);
+        lbAtk.setVisible(false);
         lbGuillotina.setVisible(false);
-        
-        
-        this.equipo1=equipo1;
-        this.equipo2=equipo2;
-        
+
+        tablaPersonajesEquipo1.getTableHeader().getColumnModel().getColumn(0).setHeaderValue(nombreEq1);
+        tablaPersonajesEquipo2.getTableHeader().getColumnModel().getColumn(0).setHeaderValue(nombreEq2);
+        loadTeams(equipo1, equipo2);
+
+        Random rand = new Random();
+        turno = rand.nextInt(1) + 1 == 0;
+        if (turno) {
+            lbTurno.setText(nombreEq1);
+        } else {
+            lbTurno.setText(nombreEq2);
+        }
+    }
+
+    private void loadTeam(DefaultTableModel modelo, List<Personaje> equipo) {
+        for (Personaje p : equipo) {
+
+            modelo.addRow(new Object[]{
+                new javax.swing.ImageIcon(getClass().
+                getResource("/resources/characters/" + p.getTipo().toLowerCase() + ".jpg"))
+            });
+        }
+    }
+
+    private void loadTeams(List<Personaje> equipo1, List<Personaje> equipo2) {
+        loadTeam(modeloTabla1, equipo1);
+        loadTeam(modeloTabla2, equipo2);
     }
 
     /**
@@ -64,12 +126,14 @@ public class BattleField extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         tablaInfo = new javax.swing.JTable() {
             //  Returning the Class of each column will allow different
-            //  renderers to be used based on Class
+            /* //  renderers to be used based on Class
             public Class getColumnClass(int column)
             {
                 return getValueAt(0, column).getClass();
-            }
+            }*/
         };
+        lbTurno = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         background = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -98,10 +162,14 @@ public class BattleField extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tablaPersonajesEquipo2.setToolTipText("Seleccione un personaje, y presione DELETE para eliminar");
         tablaPersonajesEquipo2.setOpaque(false);
         tablaPersonajesEquipo2.setRowHeight(130);
         tablaPersonajesEquipo2.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaPersonajesEquipo2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaPersonajesEquipo2MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaPersonajesEquipo2);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(720, 60, 130, 580));
@@ -127,26 +195,48 @@ public class BattleField extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tablaPersonajesEquipo1.setToolTipText("Seleccione un personaje, y presione DELETE para eliminar");
         tablaPersonajesEquipo1.setOpaque(false);
         tablaPersonajesEquipo1.setRowHeight(130);
         tablaPersonajesEquipo1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaPersonajesEquipo1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaPersonajesEquipo1MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tablaPersonajesEquipo1);
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, 130, 580));
 
         inicio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/logo.png"))); // NOI18N
+        inicio.setToolTipText("Click para terminar turno");
         inicio.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        inicio.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                inicioMouseClicked(evt);
+            }
+        });
         getContentPane().add(inicio, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 310, 100, 110));
 
+        lbHeal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbHeal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/heal.png"))); // NOI18N
-        getContentPane().add(lbHeal, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 70, -1, 70));
+        lbHeal.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbHealMouseClicked(evt);
+            }
+        });
+        getContentPane().add(lbHeal, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 70, 80, 80));
 
         lbGuillotina.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/guillotine.png"))); // NOI18N
         getContentPane().add(lbGuillotina, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 190, -1, 70));
 
+        lbAtk.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbAtk.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/attack.jpg"))); // NOI18N
-        getContentPane().add(lbAtk, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 70, -1, 70));
+        lbAtk.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lbAtkMouseClicked(evt);
+            }
+        });
+        getContentPane().add(lbAtk, new org.netbeans.lib.awtextra.AbsoluteConstraints(384, 70, 80, 80));
 
         lbImg2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lbImg2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/characters/aldeano.jpg"))); // NOI18N
@@ -176,19 +266,207 @@ public class BattleField extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tablaInfo.setToolTipText("Seleccione un personaje, y presione DELETE para eliminar");
         tablaInfo.setOpaque(false);
-        tablaInfo.setRowHeight(130);
+        tablaInfo.setRowHeight(35);
         tablaInfo.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane3.setViewportView(tablaInfo);
 
-        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 510, 510, 110));
+        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 560, 510, 60));
+
+        lbTurno.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        lbTurno.setForeground(new java.awt.Color(255, 255, 255));
+        lbTurno.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbTurno.setText("nombre equipo");
+        getContentPane().add(lbTurno, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 470, 270, -1));
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Turno");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 420, -1, -1));
 
         background.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/icons/background.jpg"))); // NOI18N
         getContentPane().add(background, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void changeTurn() {
+        this.turno = !this.turno;
+        lbAtk.setVisible(false);
+        lbHeal.setVisible(false);
+
+        resetActions();
+
+        if (turno) {
+            lbTurno.setText(nombreEq1);
+        } else {
+            lbTurno.setText(nombreEq2);
+        }
+
+    }
+
+    private void resetActions() {
+        atacar = false;
+        curar = false;
+        lbAtk.setBorder(null);
+        lbHeal.setBorder(null);
+    }
+
+    private void verifyWinner() {
+        if (modeloTabla1.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "El Equipo ganador es " + nombreEq2 + " !!!");
+
+        }
+
+        if (modeloTabla2.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "El Equipo ganador es " + nombreEq1 + " !!!");
+        }
+
+    }
+
+    private void selectCharacter(JTable tabla) {
+        if (tabla.getSelectedRow() == -1) {
+            return;
+        }
+
+        JLabel lb;
+        List<Personaje> equipoActual;
+        if (tabla.equals(tablaPersonajesEquipo1)) {
+            lb = lbImg1;
+            equipoActual = equipo1;
+        } else {
+            lb = lbImg2;
+            equipoActual = equipo2;
+        }
+
+        Personaje p = equipoActual.get(tabla.getSelectedRow());
+
+        if (p.getPt_vida() == 0) {
+            return;
+        }
+
+        lb.setIcon((Icon) tabla.getValueAt(tabla.getSelectedRow(), 0));
+        lb.setVisible(true);
+
+        //tabla equipoActual actual
+        if ((turno && tabla.equals(tablaPersonajesEquipo1))
+                || (!turno && tabla.equals(tablaPersonajesEquipo2))) {
+
+            if (curar) {
+                Mago pAnteriorMago = (Mago) equipoActual.get(index);
+                pAnteriorMago.heal(p);
+                Audio atk = new Audio(getClass().getResource("/resources/sounds/heal.wav"));
+                atk.play();
+                changeTurn();
+                showCharacterInfo(p);
+                return;
+            }
+
+            index = tabla.getSelectedRow();
+
+            resetActions();
+
+            switch (p.getTipo()) {
+                case "Mago":
+                    lbHeal.setVisible(true);
+                    break;
+                default:
+                    lbHeal.setVisible(false);
+            }
+
+            lbAtk.setVisible(true);
+        } else {//tabla enemiga
+            if (atacar) {
+                Personaje pAnterior;
+                if (equipoActual.equals(equipo1)) {
+                    pAnterior = equipo2.get(index);
+                } else {
+                    pAnterior = equipo1.get(index);
+                }
+                pAnterior.atacar(p);
+                if (pAnterior instanceof Paladin) {
+                    Paladin paladin = (Paladin) pAnterior;
+                    if (paladin.isGuillotina()) {
+                        lbGuillotina.setVisible(true);
+                        Timer tim = new Timer(1500, new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                lbGuillotina.setVisible(false);
+                            }
+                        });
+                        tim.start();
+                        //hilo muestra iamgen guillotina
+                        Audio atk = new Audio(getClass().getResource("/resources/sounds/guillotine.wav"));
+                        atk.play();
+                        paladin.setGuillotina(false);
+                    } else {
+                        Audio atk = new Audio(getClass().getResource("/resources/sounds/attack.wav"));
+                        atk.play();
+                    }
+                } else {
+                    Audio atk = new Audio(getClass().getResource("/resources/sounds/attack.wav"));
+                    atk.play();
+                }
+
+                if (p.getPt_vida() == 0) {
+                    equipoActual.remove(p);
+                    ((DefaultTableModel) tabla.getModel()).removeRow(tabla.getSelectedRow());
+                    verifyWinner();
+                }
+                changeTurn();
+                showCharacterInfo(p);
+                return;
+            }
+        }
+
+        showCharacterInfo(p);
+    }
+
+    private void showCharacterInfo(Personaje p) {
+        modeloTabla3.setDataVector(new Object[][]{
+            {p.getNombre(), p.getPt_ataque(), p.getPt_vida(), p.getTipo().toUpperCase()}
+        }, new Object[]{"Nombre", "Ataque", "Vida", "Tipo"});
+    }
+
+    private void tablaPersonajesEquipo1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPersonajesEquipo1MouseClicked
+        selectCharacter(tablaPersonajesEquipo1);
+    }//GEN-LAST:event_tablaPersonajesEquipo1MouseClicked
+
+    private void tablaPersonajesEquipo2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPersonajesEquipo2MouseClicked
+        selectCharacter(tablaPersonajesEquipo2);
+    }//GEN-LAST:event_tablaPersonajesEquipo2MouseClicked
+
+    private void inicioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inicioMouseClicked
+
+        changeTurn();
+
+    }//GEN-LAST:event_inicioMouseClicked
+
+    private void lbAtkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbAtkMouseClicked
+        if (atacar) {
+            atacar = false;
+            lbAtk.setBorder(null);
+        } else {
+            if (!curar) {
+                atacar = true;
+                lbAtk.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 153), 3));
+            }
+        }
+    }//GEN-LAST:event_lbAtkMouseClicked
+
+    private void lbHealMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lbHealMouseClicked
+        if (curar) {
+            curar = false;
+            lbHeal.setBorder(null);
+        } else {
+            if (!atacar) {
+                curar = true;
+                lbHeal.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 153), 3));
+            }
+        }
+    }//GEN-LAST:event_lbHealMouseClicked
 
     /**
      * @param args the command line arguments
@@ -204,23 +482,28 @@ public class BattleField extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(BattleField.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BattleField.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(BattleField.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BattleField.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(BattleField.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BattleField.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(BattleField.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(BattleField.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new BattleField(null,null).setVisible(true);
+                new BattleField(null, null, null, null).setVisible(true);
             }
         });
     }
@@ -228,6 +511,7 @@ public class BattleField extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel background;
     private javax.swing.JLabel inicio;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -236,6 +520,7 @@ public class BattleField extends javax.swing.JFrame {
     private javax.swing.JLabel lbHeal;
     private javax.swing.JLabel lbImg1;
     private javax.swing.JLabel lbImg2;
+    private javax.swing.JLabel lbTurno;
     private javax.swing.JTable tablaInfo;
     private javax.swing.JTable tablaPersonajesEquipo1;
     private javax.swing.JTable tablaPersonajesEquipo2;

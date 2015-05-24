@@ -22,7 +22,7 @@ import utilities.Audio;
 public class Principal extends javax.swing.JFrame {
 
     private List<Cuenta> cuentas;
-    private Audio backGroundSound;
+    static public Audio backGroundSound;
     public Principal() {
         FileOutputStream fos = null;
         initComponents();
@@ -120,6 +120,11 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_inicioMouseClicked
 
     private void btEntrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btEntrarMouseClicked
+        if(tfUsuario.getText().equals("")){
+            tfUsuario.requestFocus();
+            return;
+        }
+        
         this.dispose();
         new Lobby(tfUsuario.getText()).setVisible(true);
     }//GEN-LAST:event_btEntrarMouseClicked
