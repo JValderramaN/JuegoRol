@@ -20,7 +20,7 @@ public class Mago extends Personaje {
         if (objetivo != null && objetivo.getPt_vida() > 0
                 && objetivo.getPt_vida() < Personaje.vidaMax) {
             Random rand = new Random();
-            int randomNum = rand.nextInt((this.healPower - ataqueMagoBase) + 1) + ataqueMagoBase;
+            int randomNum = rand.nextInt((this.healPower - 5) + 1) + 5;
             objetivo.setPt_vida(objetivo.getPt_vida() + randomNum);
         }
     }
